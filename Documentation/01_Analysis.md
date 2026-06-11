@@ -1,5 +1,7 @@
 # Analysis
 
+---
+
 ## The Purpose
 I am making this game to create an enticing and enjoyable game which applies the topic of Compelx numbers to a real time situation. This game can also help develop trajectory planning, spatial reasoning, distance calculation, and angle adjustment. Because the game requires real-time physics simulations, complex multiplications for rotations must happen 60 times per second. This makes a computational solution necessary as humans cannot manually calculate the complex vector transformations this quickly.
 
