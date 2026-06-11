@@ -10,6 +10,7 @@ Complex Tanks is a basic 2D shooter game with many interesting gimmicks leading 
 use strategic manouvers and buffs to obliterate your enemy
 
 ### Controls
+
 | Action | Keybind P1 | keybind P2 |
 | forwards | W | Up arrow |
 | backwards | S | Down arrow |
