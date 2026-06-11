@@ -12,6 +12,7 @@ use strategic manouvers and buffs to obliterate your enemy
 ### Controls
 
 | Action | Keybind P1 | keybind P2 |
+| :--- | :--- | :--- |
 | forwards | W | Up arrow |
 | backwards | S | Down arrow |
 | turn left | A | Left arrow |
