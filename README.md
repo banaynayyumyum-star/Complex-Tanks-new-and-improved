@@ -1,41 +1,72 @@
-# Complex-Tanks-new-and-improved
-A 2D tank game coded on C# with Raylib with various Complex number gimmicks
+# Complex Tanks
+A 2D tank game coded on C# with Raylib, where mechanics and movement are driven by **complex numbers** and the map is an **Argand diagram**.
 
 I need: Analysis, Design, Technical Solution, Testing, and Evaluation
 
+---
+
+## Table of Contents
+1. [Overveiw](#overview)
+2. [How to Play & Controls](#how-to-play--controls)
+3. [Key Features](#key-features)
+4. [Game Modes](#game-modes)
+5. [Tank Archetypes](#tank-archetypes)
+6. [Power-Ups & Buffs](#power-ups--buffs)
+7. [Project Documentation Links](#project-documentation-links)
+
+---
+
 ## Overview
-Complex Tanks is a basic 2D shooter game with many interesting gimmicks leading to strategic gameplay. The biggest standout from other tank games is that the movement and turning is calculated with Complex numbers (i) and the map is an argand diagram 
+*Complex Tanks* is a basic 2D shooter game with many interesting gimmicks leading to strategic gameplay. The biggest standout from other tank games is that the movement and turning is calculated with Complex numbers (i) and the map is an argand diagram.
 
-## How to play
-use strategic manouvers and buffs to obliterate your enemy
+---
 
-### Controls
+## How to Play & Controls
+use strategic maneuvers, mathematical position and buffs to obliterate your enemy.
 
 | Action | Keybind P1 | keybind P2 |
 | :--- | :--- | :--- |
-| forwards | W | Up arrow |
-| backwards | S | Down arrow |
-| turn left | A | Left arrow |
-| turn right | D | Right arrow |
-| fire | Spacebar | Left mouse button |
+| Move Forward | W | Up Arrow |
+| Move Backward | S | Down Arrow |
+| Rotate Left | A | Left Arrow |
+| Rotate Right | D | Right Arrow |
+| Fire Missile | Spacebar | Left Mouse Button |
+
+---
 
 ## Key features
-- modulus swamp (magnitude) EG. get within 100 pixels of the origin and your tank gets slowed
-- Real vs Imaginary obstacles EG. some missiles can only travel through some walls
+- **The Modulus Swamp:** if a tank gets within 100 pixels of the origin, its speed will be reduced.
+- **Real vs. Imaginary Obstacles:**  specific missiles can clip through specific walls depending on their propeties.
 
-## table of contents
-# various gamemodes inlcuding:
-- classic 1 vs 1
-- player vs bots
-- timed survival (with no turret) against bots 
-- (*maybe*) player/players vs waves of bots
+---
 
-# multiple tanks
-- aerodynamic tank
-- bulky strong tank
-- burst tank
-- multishot tank
+## Game Modes
+- **Classic 1v1:** 2 player duel to the death.
+- **Player vs Bots:** Single-player practice against AI tanks.
+- **Timed Survival:** Survive as long as possible against random bots with a disable turret.
+- **Waves (stretch goal):** Solo or Co-op waves of enemy bots.
 
-# interesting buffs
-- Complex conjugate EG. you will get reflected across the real axis to dodge a missile
-- *to be thought of*
+---
+
+## Tank Archetypes
+Using Object-Oriented Inheritance, the game features distinct tank classes:
+- **Aerodynamic Tank:** Lower health, higher movement speed.
+- **Bulky Tank:** Higher health, lower movement speed.
+- **Burst Tank:** Default stats, can shoot 3 missiles in a quick burst.
+- **Multishot Tank:** Default stats, shoots 3 diverging missiles forwards simultaneously.
+
+---
+
+## Power-Ups & Buffs
+- **Complex conjugate ($\bar{z}$):** Instantly reflect the player's tank across the Real axis to dodge an attack.
+- **Scalar Multiplier ($kz$):** Temporarily mltiplies the tank's velocity vector by a scalar constant $k$.
+- **The $i$-Shield (Rotation):** Rotates all incoming enemy velocity vectors by $90^\circ$ ($\times i$), deflecting missiles.
+
+---
+
+## Project Documentation Links
+* [01_Analysis.md](./Documentation/01_Analysis.md)
+* [02_Design.md](./Documentation/02_Design.md)
+* [03_Technical_Solution.md](./Documentation/03_Technical_Solution.md)
+* [04_Testing.md](./Documentation/04_Testing.md)
+* [05_Evaluation.md](./Documentation/05_Evaluation.md)
