@@ -7,8 +7,10 @@ I need: Analysis, Design, Technical Solution, Testing, and Evaluation
 Complex Tanks is a basic 2D shooter game with many interesting gimmicks leading to strategic gameplay. The biggest standout from other tank games is that the movement and turning is calculated with Complex numbers (i) and the map is an argand diagram 
 
 ## How to play
-| Action | Keybind |
-| | player 1 | player 2 |
+use strategic manouvers and buffs to obliterate your enemy
+
+### Controls
+| Action | Keybind P1 | keybind P2 |
 | forwards | W | Up arrow |
 | backwards | S | Down arrow |
 | turn left | A | Left arrow |
