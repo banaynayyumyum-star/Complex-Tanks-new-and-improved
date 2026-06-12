@@ -92,10 +92,7 @@ endif
 
 ## User Interface Design
 
-- Main Menu $\rightarrow$ Game Modes $\rightarrow$ Gameplay Arena $\rightarrow$ Game OVer
-- Main Menu $\leftrightarrow$ Settings
-- Main Menu $\leftrightarrow$ Help
-
+### Screen Descriptions
 - Main Menu Screen: Includes a title ('Complex Tanks') accompanied by a 'Play' button, 'settings' button and a 'help' button. An 'Exit' button is also included slightly below.
 - Game Modes Screen: Includes a list of the game modes (1v1 Local PvP, Player vs Bots, Timed Survival) and a 'back' button.
 - Gameplay Arena: Background with a rendered, labeled Argand diagram intersecting at (GetScreenWidth/2, GetScreenHeight/2).
@@ -105,3 +102,8 @@ endif
 - Game Over Screen: Displays the outcome of the game (EG: "Player 1 Wins!" or "time survived: X seconds") with navigation options to the Main Menu
 - Settings Screen: Shows all customisable features (tank colours, Cheat Settings)
 - Help Screen: Presents you with a description of the game, its controls, and how each game mode works
+
+### Navigation Flow
+- Main Menu $\rightarrow$ Game Modes $\rightarrow$ Gameplay Arena $\rightarrow$ Game OVer
+- Main Menu $\leftrightarrow$ Settings
+- Main Menu $\leftrightarrow$ Help
