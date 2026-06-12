@@ -104,6 +104,6 @@ endif
 - Help Screen: Presents you with a description of the game, its controls, and how each game mode works
 
 ### Navigation Flow
-- Main Menu $\rightarrow$ Game Modes $\rightarrow$ Gameplay Arena $\rightarrow$ Game OVer
+- Main Menu $\rightarrow$ Game Modes $\rightarrow$ Gameplay Arena $\rightarrow$ Game Over
 - Main Menu $\leftrightarrow$ Settings
 - Main Menu $\leftrightarrow$ Help
