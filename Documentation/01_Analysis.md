@@ -35,7 +35,7 @@ This game is targeted at any student or game enjoyer with an interest in maths a
 | Game | Tank! (Kee Games, 1974) | Wii Play: Tanks (Nintendo, 2006) | Diep.io (Miniclip 2016) | Complex Tanks (my project) |
 | **Perspective** | Top-down 2D | Top-down 2.5D | Top-down 2D | **Top-down 2D** |
 | **Movement Physics** | dual-track arcade simulation (linear $x,y$) | standard $x,y$ vector movement | standard $x,y$ vector movement | **Complex number tranformations ($z = x + iy$)** |
-| **Obstacles** | static, indestructable walls & landmines | destructable wooden walls and bounce walls | destructable geometry shapes | **Real or Imaginary phase shifting walls**
+| **Obstacles** | static, indestructable walls & landmines | destructable wooden walls and bounce walls | destructable geometry shapes | **Real or Imaginary phase shifting walls** |
 | **Aiming Mechanism** | turret locked in chassis direction | independent aiming with Wii remote | independent aiming with mouse | **independent turret rotation with Complex number multiplication** |
 | **Game Modes** | 1v1 local PvP | progressive single player waves | Free-for-all, teams, survival, maze | **1v1, player vs bots, bot waves, timed survival** |
 | **Progression** | none (only 1v1 PvP) | 100 missions with 20 stages of enemies | upgrades and levels | **various tanks and special upgrades** |
