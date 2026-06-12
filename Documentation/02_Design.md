@@ -33,8 +33,9 @@ Inheritance: each type of tank will have these base properties with each having 
 ## Algorithmic Design
 
 ### How the Tank moves and turns (Pseudo-Code)
-// all un-set variable have been set elsewhere in the code
 
+// all un-set variable have been set elsewhere in the code
+```text
 tankPosition = Complex(startPosX, startPosY)
 tankDirection = Complex(1, 0)
 tankSpeed = baseSpeed
@@ -51,8 +52,10 @@ else if keypressed = A THEN
 else if keypressed = D THEN
   tankDirection *= rotateRight
 endif
+```
 
 ### How the Modulus Swamp works (Pseudo-Code)
+```text
 // tankSpeed must be reset at the beginning of the update loop before all code
 tankSpeed = baseSpeed 
 
@@ -64,8 +67,10 @@ speedDebuff = 0.5
 if CalculateModulus(relativePosition) <= range THEN
   Tank.tankSpeed *= speedDebuff
 endif
- 
+ ```
+
 ### How a bullet checks if its matching the phase of a wall (Pseudo-Code)
+``` text
 // all un-set variable have been set elsewhere in the code
 
 distanceVector = missilePosition - wallPosition
@@ -82,6 +87,7 @@ if actualDistance <= collisionThreshold
     wall.triggerImpact()
   endif
 endif
+```
 
 ---
 
