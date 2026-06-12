@@ -33,9 +33,8 @@ Inheritance: each type of tank will have these base properties with each having 
 ## Algorithmic Design
 
 ### How the Tank moves and turns (Pseudo-Code)
-
-// all un-set variable have been set elsewhere in the code
 ```text
+// all un-set variable have been set elsewhere in the code
 tankPosition = Complex(startPosX, startPosY)
 tankDirection = Complex(1, 0)
 tankSpeed = baseSpeed
