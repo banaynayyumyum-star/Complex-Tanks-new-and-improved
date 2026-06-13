@@ -83,4 +83,12 @@ namespace Complex_Tanks_new_and_improved
 
 --- 
 
-## Iteration 2:
+## Iteration 2: Rendering the Argand diagram arena
+
+### 1. Objective
+The purpose of this is to create a background for the Arena so players can see what quadrant they are in and be aware of how specific gimmicks may affect them at the time.
+
+### 2. Core Code Solution
+``` csharp
+
+```
