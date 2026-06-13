@@ -67,6 +67,6 @@ Using Object-Oriented Inheritance, the game features distinct tank classes:
 ## Project Documentation Links
 * [01_Analysis.md](./Documentation/01_Analysis.md)
 * [02_Design.md](./Documentation/02_Design.md)
-* [03_Technical_Solution.md](./Documentation/03_Technical_Solution.md)
+* [03_Implementation.md](./Documentation/03_Implementation.md)
 * [04_Testing.md](./Documentation/04_Testing.md)
 * [05_Evaluation.md](./Documentation/05_Evaluation.md)
