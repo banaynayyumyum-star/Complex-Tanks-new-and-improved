@@ -76,19 +76,74 @@ namespace Complex_Tanks_new_and_improved
   - Console Output Verification:
   - <img width="308" height="84" alt="image" src="https://github.com/user-attachments/assets/16619755-2e70-45d0-bad0-59706c359653" />
 
-
 - Compilation and Error Log Status:
-  (The solution compiles cleanly with 0 Errors and 0 Warnings
+  (The solution compiles cleanly with 0 Errors and 0 Warnings)
   <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/c6b4ef02-3e2e-4289-b2e6-78ee1e0426b0" /> 
 
 --- 
 
-## Iteration 2: Rendering the Argand diagram arena
+## Iteration 2: Rendering the Argand Diagram Arena
 
 ### 1. Objective
-The purpose of this is to create a background for the Arena so players can see what quadrant they are in and be aware of how specific gimmicks may affect them at the time.
+The purpose of this is to create a background for the Arena so players can see what quadrant they are in and be aware of how specific gimmicks may affect them at the time. The modulus swamp is also added so players can see where they will get slowed.
 
 ### 2. Core Code Solution
 ``` csharp
+// Inside the main game update/draw loop
+    // clears the screen to a white canvas
+    ClearBackground(Raylib_cs.Color.White);
 
+    // finds the centre of the screen
+    int centerX = GetScreenWidth() / 2;
+    int centerY = GetRenderHeight() / 2;
+    Vector2 centerV = new Vector2(centerX, centerY);
+
+    // finds the vectors for the starts and ends of each axes
+    Vector2 realStart = new Vector2(0, centerY);
+    Vector2 realEnd = new Vector2(GetScreenWidth(), centerY);
+
+    Vector2 imaginaryStart = new Vector2(GetScreenWidth() / 2, 0);
+    Vector2 imaginaryEnd = new Vector2(GetScreenWidth() / 2, GetScreenHeight());
+
+    // draws real and imaginary axes
+    DrawLineEx(realStart, realEnd, 3.0f, Raylib_cs.Color.LightGray);
+    DrawLineEx(imaginaryStart, imaginaryEnd, 3.0f, Raylib_cs.Color.LightGray);
+
+    // draws the modulus swamp outline and fills it in with a transparent red
+    DrawRing(centerV, 117, 120, 0, 360, 0, Raylib_cs.Color.LightGray);
+    Raylib_cs.Color swampColour = new Raylib_cs.Color(255, 0, 0, 50);
+    DrawCircle(centerX, centerY, 117, swampColour);
 ```
+Design modification note: when testing the original design for the modulus swamp (100 pixels out from the center) didnt affect the gameplay as much as desired so the radius has been changed to 120 pixels instead.
+
+### 3. Evidence of Testing
+- Visual Verification: upon running, the Raylib window opens and both Real and Imaginary axes are drawn 3 pixels wide along with the outline for the modulus swamp and its transparent red filling.
+- scaling test: when tested with different screen sizes, the operations are still carried out as desired with no error.
+  - <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/79a2275b-3bf9-4e5d-ae07-871ba3f45a58" />
+  - <img width="813" height="646" alt="image" src="https://github.com/user-attachments/assets/eb5b3824-ee90-4898-82cf-3d826c7aa5a2" />
+
+- Compilation and Error Log Status:
+  (The solution compiles cleanly with 0 Errors and 0 Warnings)
+  <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/9dd75e85-583e-4c35-8551-8e32cef01f1e" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
