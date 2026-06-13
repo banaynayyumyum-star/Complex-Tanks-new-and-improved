@@ -74,7 +74,7 @@ namespace Complex_Tanks_new_and_improved
             Console.WriteLine($"Modulus: {length}");
     ```
   - Console Output Verification:
-    <img width="308" height="84" alt="image" src="https://github.com/user-attachments/assets/16619755-2e70-45d0-bad0-59706c359653" />
+  - <img width="308" height="84" alt="image" src="https://github.com/user-attachments/assets/16619755-2e70-45d0-bad0-59706c359653" />
 
 
 - Compilation and Error Log Status:
