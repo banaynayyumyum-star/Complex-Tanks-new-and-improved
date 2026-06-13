@@ -58,7 +58,7 @@ namespace Complex_Tanks_new_and_improved
 ### 3. Evidence of Testing
 - Method Verification: To verift the math engine, I created a temporary testing block insinde the Main method. I initialised to two complex numbers and performed an addition operation. The ouput confirmed the sum was calculated correctly. The calculateModulus method was tested using a 3-4-5 triangle which returned the expected value of 5.0
   - ```testing
-                // 1. Create two test complex numbers
+            // 1. Create two test complex numbers
             ComplexNumber c1 = new ComplexNumber(3, 4);
             ComplexNumber c2 = new ComplexNumber(1, 2);
 
@@ -76,5 +76,5 @@ namespace Complex_Tanks_new_and_improved
 
 
 
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/c6b4ef02-3e2e-4289-b2e6-78ee1e0426b0" /> 
-0 Errors, 0 Warnings
+- <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/c6b4ef02-3e2e-4289-b2e6-78ee1e0426b0" /> 
+    0 Errors, 0 Warnings
