@@ -119,7 +119,9 @@ Design modification note: when testing the original design for the modulus swamp
 ### 3. Evidence of Testing
 - Visual Verification: upon running, the Raylib window opens and both Real and Imaginary axes are drawn 3 pixels wide along with the outline for the modulus swamp and its transparent red filling.
 - scaling test: when tested with different screen sizes, the operations are still carried out as desired with no error.
+  - fullscreen:
   - <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/79a2275b-3bf9-4e5d-ae07-871ba3f45a58" />
+  - screen size of 800 by 600:
   - <img width="813" height="646" alt="image" src="https://github.com/user-attachments/assets/eb5b3824-ee90-4898-82cf-3d826c7aa5a2" />
 
 - Compilation and Error Log Status:
