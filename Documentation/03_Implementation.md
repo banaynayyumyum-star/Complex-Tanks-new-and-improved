@@ -1,4 +1,5 @@
 # Implementation
+Design $\rightarrow$ Code $\rightarrow$ Test $\rightarrow$ Evaluate.
 
 ## Iteration 1: Custom Complex Number Math Engine
 
@@ -14,12 +15,14 @@ namespace Complex_Tanks_new_and_improved
         public double Real = 0;
         public double Imaginary = 0;
 
+        // a custom math engine to create a complex number
         public ComplexNumber(double real, double imaginary)
         {
             Real = real;
             Imaginary = imaginary;
         }
 
+        // a method to add 2 complex numbers together
         public ComplexNumber Add(ComplexNumber otherVector)
         {
             double newReal = this.Real + otherVector.Real;
@@ -28,6 +31,7 @@ namespace Complex_Tanks_new_and_improved
             return new ComplexNumber(newReal, newImaginary);
         }
 
+        // a method to subtract 2 complex numbers from eachother
         public ComplexNumber Subtract(ComplexNumber otherVector)
         {
             double newReal = this.Real - otherVector.Real;
@@ -36,6 +40,7 @@ namespace Complex_Tanks_new_and_improved
             return new ComplexNumber(newReal, newImaginary);
         }
 
+        // a method to multiple 2 complex numbers together
         public ComplexNumber Multiply(ComplexNumber otherVector)
         {
             double newReal = (this.Real * otherVector.Real) - (this.Imaginary * otherVector.Imaginary);
@@ -44,11 +49,10 @@ namespace Complex_Tanks_new_and_improved
             return new ComplexNumber(newReal, newImaginary);
         }
 
+        // a method to find the modulus of a vector 
         public double CalculateModulus()
         {
-            double newReal = this.Real;
-            double newImaginary = this.Imaginary;
-            double newModulus = Math.Sqrt((newReal * newReal) + (newImaginary * newImaginary));
+            double newModulus = Math.Sqrt((Real * Real) + (Imaginary * Imaginary));
 
             return newModulus;
         }
@@ -128,7 +132,7 @@ Design modification note: when testing the original design for the modulus swamp
   (The solution compiles cleanly with 0 Errors and 0 Warnings)
   <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/9dd75e85-583e-4c35-8551-8e32cef01f1e" />
 
-
+## Iteration 3.
 
 
 
