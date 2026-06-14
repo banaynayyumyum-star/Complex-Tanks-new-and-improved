@@ -133,7 +133,7 @@ Design modification note: when testing the original design for the modulus swamp
   (The solution compiles cleanly with 0 Errors and 0 Warnings)
   <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/9dd75e85-583e-4c35-8551-8e32cef01f1e" />
 
-## Iteration 3.
+## Iteration 3: Vector-Based Tank Mechanics
 
 ### 1. Objective
 The purpose of this iteration is to get the Tank class running and have a Tank for each player moving comfortably across the map.
@@ -146,175 +146,244 @@ using Color = Raylib_cs.Color;
 using KeyboardKey = Raylib_cs.KeyboardKey;
 using MouseButton = Raylib_cs.MouseButton;
 
+
+
 namespace Complex_Tanks_new_and_improved
 {
-    class Game
+    // creates the TankType data type
+    public enum TankType
     {
-        public static void Main()
+        Default,
+        Aerodynamic,
+        Bulky,
+        Burst,
+        Multishot,
+        TimedSurvival
+    }
+    internal class Tank
+    {
+        // --- VARIABLE DECLARATION ---
+        private ComplexNumber tankPosition;
+        private ComplexNumber tankDirection;
+
+        // set to readonly as they wont be getting changed
+        private readonly ComplexNumber rotateLeft = new ComplexNumber(0.9994, 0.0349);
+        private readonly ComplexNumber rotateRight = new ComplexNumber(0.9994, -0.0349);
+
+        private float tankSpeed;
+        private int tankHP;
+        private Color tankColour;
+        private TankType Tanktype;
+        private bool canFire;
+
+        private KeyboardKey forwardKey;
+        private KeyboardKey backwardKey;
+        private KeyboardKey rotateLeftKey;
+        private KeyboardKey rotateRightKey;
+
+        // keeps all the variables encapsulated
+        public Tank(double startX, double startY, int startDirectionX, int startDirectionY, float baseSpeed, int healthPoints, Color colour, TankType typeInput, bool canFireInput,
+                    KeyboardKey forward, KeyboardKey backward, KeyboardKey left, KeyboardKey right)
         {
-            // Initializes window ("Complex Tanks"), sets it to borderless windowed and sets the frames per second to 60
-            InitWindow(800, 600, "Complex Tanks");
-            ToggleBorderlessWindowed();
-            SetTargetFPS(60);
+            // sets starting position as a ComplexNumber
+            tankPosition = new ComplexNumber(startX, startY);
 
-            // --- finds start position of the tanks ---
-            // finds the center X and Y position and the offset the tanks spawn from the wall
-            int centerX = GetScreenWidth() / 2;
-            int centerY = GetRenderHeight() / 2;
-            int offset = 100;
+            // sets direction to face the middle depending on what side you are
+            tankDirection = new ComplexNumber(startDirectionX, startDirectionY);
+            tankSpeed = baseSpeed;
+            tankHP = healthPoints;
+            tankColour = colour;
+            Tanktype = typeInput;
+            canFire = canFireInput;
 
-            // calculates the start X and Y positions for each tank (top left and bottom right corners)
-            float player1StartX = (offset - centerX) / 30.0f;
-            float player1StartY = (centerY - offset) / 30.0f;
-            float player2StartX = - player1StartX;
-            float player2StartY = - player1StartY;
+            // assigns all the keyboard keys
+            forwardKey = forward;
+            backwardKey = backward;
+            rotateLeftKey = left;
+            rotateRightKey = right;
+        }
+        
+        public void Fire()
+        {
 
-            float speed = 1.0f / 12.0f;
-            int HP = 100;
+        }
 
-            // player 1 and player 2 are drawn
-            Tank player1 = new Tank(player1StartX, player1StartY, 1, 0, speed, HP, Color.Red, TankType.Default, true,
-                           KeyboardKey.W, KeyboardKey.S, KeyboardKey.A, KeyboardKey.D);
-            Tank player2 = new Tank(player2StartX, player2StartY, -1, 0, speed, HP, Color.Blue, TankType.Default, true,
-                           KeyboardKey.Up, KeyboardKey.Down, KeyboardKey.Left, KeyboardKey.Right);
+        public void PowerUp()
+        {
 
-            // --- main loop (runs 60 times per second) ---
-            while (!WindowShouldClose())
+        }
+
+        public void Update()
+        {
+            // --- FORWARD MOVEMENT ---
+            if (IsKeyDown(forwardKey))
             {
-                // updates the players positions as they move
-                player1.Update();
-                player2.Update();
-
-                // ----------------------------------------------------------------------------------
-
-                // if fire keys are being pressed, it calls the fire method to shoot a missile
-                if (IsKeyPressed(KeyboardKey.Space))
-                {
-                    player1.Fire();
-                }
-                if (IsMouseButtonPressed(MouseButton.Left))
-                {
-                    player2.Fire();
-                }
-
-                // if power-up keys are being pressed, it calls the PowerUp method to use the power-up
-                if (IsKeyPressed(KeyboardKey.E))
-                {
-                    player1.PowerUp();
-                }
-                if (IsMouseButtonPressed(MouseButton.Right))
-                {
-                    player2.PowerUp();
-                }
-
-                // ----------------------------------------------------------------------------------
-
-                BeginDrawing();
-
-                // ----------------------------------------------------------------------------------
-
-                // clears the screen to a white canvas
-                ClearBackground(Color.White);
-
-                // finds the centreVector of the screen with centerX and centerY from earlier
-                Vector2 centerVector = new Vector2(centerX, centerY);
-
-                // finds the vectors for the starts and ends of each axes
-                Vector2 realStart = new Vector2(0, centerY);
-                Vector2 realEnd = new Vector2(GetScreenWidth(), centerY);
-
-                Vector2 imaginaryStart = new Vector2(GetScreenWidth() / 2, 0);
-                Vector2 imaginaryEnd = new Vector2(GetScreenWidth() / 2, GetScreenHeight());
-
-                // draws real and imaginary axes
-                DrawLineEx(realStart, realEnd, 3.0f, Color.LightGray);
-                DrawLineEx(imaginaryStart, imaginaryEnd, 3.0f, Color.LightGray);
-
-                // draws the modulus swamp outline and fills it in with a transparent red
-                Color swampColour = new Color(255, 0, 0, 50);
-                DrawCircle(centerX, centerY, 118, swampColour);
-                DrawRing(centerVector, 117, 120, 0, 360, 0, Color.LightGray);
-
-                // ----------------------------------------------------------------------------------
-
-                // draws both tanks so they keep their updated positions
-                player1.Draw();
-                player2.Draw();
-
-                EndDrawing();
+                // creates the movement vector to add to the tanks current position
+                ComplexNumber tempMovementVector = new ComplexNumber(tankDirection.Real * tankSpeed, tankDirection.Imaginary * tankSpeed);
+                tankPosition = tankPosition.Add(tempMovementVector);
             }
-            CloseWindow();
+            // --- BACKWARD MOVEMENT ---
+            if (IsKeyDown(backwardKey))
+            {
+                // creates the movement vector to subtract to the tanks current position
+                ComplexNumber tempMovementVector = new ComplexNumber(tankDirection.Real * tankSpeed, tankDirection.Imaginary * tankSpeed);
+                tankPosition = tankPosition.Subtract(tempMovementVector);
+            }
+            // --- ROTATIONS ---
+            if (IsKeyDown(rotateLeftKey))
+            {
+                // multiplies the tanks direction by the constant Anit-clockwise rotation
+                tankDirection = tankDirection.Multiply(rotateLeft);
+            }
+            if (IsKeyDown(rotateRightKey))
+            {               
+                // multiplies the tanks direction by the constant clockwise rotation
+                tankDirection = tankDirection.Multiply(rotateRight);
+            }
+
+            // --- VECTOR RESET ---
+            // divide the vector length by the current modulus to reset it back to exactly 1.0
+            double temporaryModulus = tankDirection.CalculateModulus();
+
+            // to prevent a "Divide by Zero" error, only reset it if the modulus is greater than 0
+            if (temporaryModulus > 0)
+            {
+                tankDirection.Real /= temporaryModulus;
+                tankDirection.Imaginary /= temporaryModulus;
+            }
+        }
+        public void Draw()
+        {
+            // find the center of the screen
+            float centerX = GetScreenWidth() / 2.0f;
+            float centerY = GetScreenHeight() / 2.0f;
+            float scale = 30.0f; // 30 pixels per unit
+
+            // convert the tanks position into screen pixels
+            float screenX = centerX + ((float)tankPosition.Real * scale);
+            float screenY = centerY - ((float)tankPosition.Imaginary * scale);
+
+            // creates the vectors for the position and size of the tank
+            Vector2 screenPosition = new Vector2(screenX, screenY);
+            Vector2 drawOffset = new Vector2(screenX - 20, screenY - 20);
+            Vector2 size = new Vector2(40, 40);
+
+            // creates the vectors for the tanks turret
+            Vector2 turretStart = screenPosition;
+            Vector2 turretEnd = new Vector2(
+                screenX + (float)tankDirection.Real * 50,
+                screenY - (float)tankDirection.Imaginary * 50);
+            
+            // draws the tank and then turret
+            DrawRectangleV(drawOffset, size, tankColour);
+            DrawLineEx(turretStart, turretEnd, 5.0f, Color.Black);
         }
     }
 }
 ```
-in program.cs
+#### The Execution Driver Loop
 ```csharp
         public static void Main()
+{
+    // Initializes window ("Complex Tanks"), sets it to borderless windowed and sets the frames per second to 60
+    InitWindow(800, 600, "Complex Tanks");
+    ToggleBorderlessWindowed();
+    SetTargetFPS(60);
+
+    // --- finds start position of the tanks ---
+    // finds the center X and Y position and the offset the tanks spawn from the wall
+    int centerX = GetScreenWidth() / 2;
+    int centerY = GetRenderHeight() / 2;
+    int offset = 100;
+
+    // calculates the start X and Y positions for each tank (top left and bottom right corners)
+    float player1StartX = (offset - centerX) / 30.0f;
+    float player1StartY = (centerY - offset) / 30.0f;
+    float player2StartX = - player1StartX;
+    float player2StartY = - player1StartY;
+
+    float speed = 1.0f / 12.0f;
+    int HP = 100;
+
+    // player 1 and player 2 are drawn
+    Tank player1 = new Tank(player1StartX, player1StartY, 1, 0, speed, HP, Color.Red, TankType.Default, true,
+                   KeyboardKey.W, KeyboardKey.S, KeyboardKey.A, KeyboardKey.D);
+    Tank player2 = new Tank(player2StartX, player2StartY, -1, 0, speed, HP, Color.Blue, TankType.Default, true,
+                   KeyboardKey.Up, KeyboardKey.Down, KeyboardKey.Left, KeyboardKey.Right);
+
+    // --- main loop (runs 60 times per second) ---
+    while (!WindowShouldClose())
+    {
+        // updates the players positions as they move
+        player1.Update();
+        player2.Update();
+
+        // ----------------------------------------------------------------------------------
+
+        // if fire keys are being pressed, it calls the fire method to shoot a missile
+        if (IsKeyPressed(KeyboardKey.Space))
         {
+            player1.Fire();
+        }
+        if (IsMouseButtonPressed(MouseButton.Left))
+        {
+            player2.Fire();
+        }
 
-            // --- finds start position of the tanks ---
-            // finds the center X and Y position and the offset the tanks spawn from the wall
-            int centerX = GetScreenWidth() / 2;
-            int centerY = GetRenderHeight() / 2;
-            int offset = 100;
-            
-            // calculates the start X and Y positions for each tank (top left and bottom right corners)
-            float player1StartX = (offset - centerX) / 30.0f;
-            float player1StartY = (centerY - offset) / 30.0f;
-            float player2StartX = - player1StartX;
-            float player2StartY = - player1StartY;
+        // if power-up keys are being pressed, it calls the PowerUp method to use the power-up
+        if (IsKeyPressed(KeyboardKey.E))
+        {
+            player1.PowerUp();
+        }
+        if (IsMouseButtonPressed(MouseButton.Right))
+        {
+            player2.PowerUp();
+        }
 
-            float speed = 1.0f / 12.0f;
-            int HP = 100;
+        // ----------------------------------------------------------------------------------
 
-            // player 1 (Red) and player 2 (Blue) are drawn
-            Tank player1 = new Tank(player1StartX, player1StartY, 1, 0, speed, HP, Color.Red, TankType.Default, true,
-                           KeyboardKey.W, KeyboardKey.S, KeyboardKey.A, KeyboardKey.D);
-            Tank player2 = new Tank(player2StartX, player2StartY, -1, 0, speed, HP, Color.Blue, TankType.Default, true,
-                           KeyboardKey.Up, KeyboardKey.Down, KeyboardKey.Left, KeyboardKey.Right);
+        BeginDrawing();
 
-            // --- MAIN LOOP (runs 60 times per second) ---
-            while (!WindowShouldClose())
-            {
-                // updates the players positions as they move
-                player1.Update();
-                player2.Update();
+        // ----------------------------------------------------------------------------------
 
-                // if fire keys are being pressed, it calls the fire method to shoot a missile
-                if (IsKeyPressed(KeyboardKey.Space))
-                {
-                    player1.Fire();
-                }
-                if (IsMouseButtonPressed(MouseButton.Left))
-                {
-                    player2.Fire();
-                }
+        // --- ARGAND DIAGRAM AND MODULUS SWAMP ---
+        // clears the screen to a white canvas
+        ClearBackground(Color.White);
 
-                // if power-up keys are being pressed, it calls the PowerUp method to use the power-up
-                if (IsKeyPressed(KeyboardKey.E))
-                {
-                    player1.PowerUp();
-                }
-                if (IsMouseButtonPressed(MouseButton.Right))
-                {
-                    player2.PowerUp();
-                }
+        // finds the centreVector of the screen with centerX and centerY from earlier
+        Vector2 centerVector = new Vector2(centerX, centerY);
 
-                BeginDrawing();
+        // finds the vectors for the starts and ends of each axes
+        Vector2 realStart = new Vector2(0, centerY);
+        Vector2 realEnd = new Vector2(GetScreenWidth(), centerY);
 
-                // [argand diagram and modulus swamp from iteration 2]
+        Vector2 imaginaryStart = new Vector2(GetScreenWidth() / 2, 0);
+        Vector2 imaginaryEnd = new Vector2(GetScreenWidth() / 2, GetScreenHeight());
 
-                // draws both tanks so they keep their updated positions
-                player1.Draw();
-                player2.Draw();
+        // draws real and imaginary axes
+        DrawLineEx(realStart, realEnd, 3.0f, Color.LightGray);
+        DrawLineEx(imaginaryStart, imaginaryEnd, 3.0f, Color.LightGray);
 
-                EndDrawing();
-            }
+        // draws the modulus swamp outline and fills it in with a transparent red
+        Color swampColour = new Color(255, 0, 0, 50);
+        DrawCircle(centerX, centerY, 118, swampColour);
+        DrawRing(centerVector, 117, 120, 0, 360, 0, Color.LightGray);
+
+        // ----------------------------------------------------------------------------------
+
+        // draws both tanks so they keep their updated positions
+        player1.Draw();
+        player2.Draw();
+
+        EndDrawing();
+    }
 ```
 
 ### 3. Evidence of Testing
-- Visual Verification: upon running, 2 tanks (one Red and one Blue) are drawn onto the Argand diagram, each 100 pixels from the corners. The red tank can be moved with W, A, S, D and the blue tank with Up, Left, Down, Right Arrows.
+- Evaluation: The implementation of the Tank() class successfully uses the ComplexNumber math engine and Raylib rendering. By fixing the bug, the movement system is now consistent and smooth, and ready to support the upcoming combat mechanics in Iteration 4.
+- Visual Verification: Upon running, 2 tanks (one Red and one Blue) are drawn onto the Argand diagram, each 100 pixels from the corners. The red tank can be moved with W, A, S, D and the blue tank with Up, Left, Down, Right Arrows.
+- Beta Test Issue: During the initial movement testing, a physics bug was found where the tanks accelerated exponentially across the screen into infinity when turning keys were held down
+- Issue Fix: The bug was caused by tiny floating-point rounding errors during complex multiplication causing the direction vector's modulus to continuously increase above 1.0. A reset was implemented at the end of the Update() method to regulate the modulus and scale the vector components back to a length of 1.0 every frame to keep gameplay consistent.
   - Figure 1: upon start
   - <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/049b4156-862d-4db0-ab2d-e015798581ce" />
   - Figure 2: after movement
@@ -324,7 +393,7 @@ in program.cs
   (The solution compiles cleanly with 0 Errors and 0 Warnings)
 - <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/620b38b4-31a0-4523-aeb2-bf4f214f96ff" />
 
-
+## Iteration 4: Combat mechanics
 
 
 
