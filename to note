@@ -1,1 +1,12 @@
 
+# we must convert pixels to our units for ComplexNumber because if we dont the maths would break
+- on a mathmatical plane: moving 1 unit forward means adding a vector of magnitude 1
+- on a pixel plane: if 1 unit = 1 pixel, your tanks speed is restricted to 1 pixel per frame and if you try to increase it,
+  it would be like adding more to the vector when rotating which would fold and bend the rectangle and break the game
+
+- on my monitor it may look good
+- on an invidulators bigger/smaller, the tank may move much faster or slower, and the tank may spawn offscreen
+
+- by using a scale factor, the logic would stay the same in all situations, keeping gameplay constant
+
+# 
