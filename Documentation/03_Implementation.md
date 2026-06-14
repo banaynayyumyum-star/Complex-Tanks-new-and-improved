@@ -94,6 +94,7 @@ The purpose of this is to create a background for the Arena so players can see w
 ### 2. Core Code Solution
 ``` csharp
 // Inside the main game update/draw loop
+    // --- ARGAND DIAGRAM AND MODULUS SWAMP ---
     // clears the screen to a white canvas
     ClearBackground(Raylib_cs.Color.White);
 
@@ -134,14 +135,130 @@ Design modification note: when testing the original design for the modulus swamp
 
 ## Iteration 3.
 
+### 1. Objective
+The purpose of this iteration is to get the Tank class running and have a Tank for each player moving comfortably across the map.
 
+### 2. Code Solution
+```csharp
+using System.Numerics;
+using static Raylib_cs.Raylib;
+using Color = Raylib_cs.Color;
+using KeyboardKey = Raylib_cs.KeyboardKey;
+using MouseButton = Raylib_cs.MouseButton;
 
+namespace Complex_Tanks_new_and_improved
+{
+    class Game
+    {
+        public static void Main()
+        {
+            // Initializes window ("Complex Tanks"), sets it to borderless windowed and sets the frames per second to 60
+            InitWindow(800, 600, "Complex Tanks");
+            ToggleBorderlessWindowed();
+            SetTargetFPS(60);
 
+            // --- finds start position of the tanks ---
+            // finds the center X and Y position and the offset the tanks spawn from the wall
+            int centerX = GetScreenWidth() / 2;
+            int centerY = GetRenderHeight() / 2;
+            int offset = 100;
 
+            // calculates the start X and Y positions for each tank (top left and bottom right corners)
+            float player1StartX = (offset - centerX) / 30.0f;
+            float player1StartY = (centerY - offset) / 30.0f;
+            float player2StartX = - player1StartX;
+            float player2StartY = - player1StartY;
 
+            float speed = 1.0f / 12.0f;
+            int HP = 100;
 
+            // player 1 and player 2 are drawn
+            Tank player1 = new Tank(player1StartX, player1StartY, 1, 0, speed, HP, Color.Red, TankType.Default, true,
+                           KeyboardKey.W, KeyboardKey.S, KeyboardKey.A, KeyboardKey.D);
+            Tank player2 = new Tank(player2StartX, player2StartY, -1, 0, speed, HP, Color.Blue, TankType.Default, true,
+                           KeyboardKey.Up, KeyboardKey.Down, KeyboardKey.Left, KeyboardKey.Right);
 
+            // --- main loop (runs 60 times per second) ---
+            while (!WindowShouldClose())
+            {
+                // updates the players positions as they move
+                player1.Update();
+                player2.Update();
 
+                // ----------------------------------------------------------------------------------
+
+                // if fire keys are being pressed, it calls the fire method to shoot a missile
+                if (IsKeyPressed(KeyboardKey.Space))
+                {
+                    player1.Fire();
+                }
+                if (IsMouseButtonPressed(MouseButton.Left))
+                {
+                    player2.Fire();
+                }
+
+                // if power-up keys are being pressed, it calls the PowerUp method to use the power-up
+                if (IsKeyPressed(KeyboardKey.E))
+                {
+                    player1.PowerUp();
+                }
+                if (IsMouseButtonPressed(MouseButton.Right))
+                {
+                    player2.PowerUp();
+                }
+
+                // ----------------------------------------------------------------------------------
+
+                BeginDrawing();
+
+                // ----------------------------------------------------------------------------------
+
+                // clears the screen to a white canvas
+                ClearBackground(Color.White);
+
+                // finds the centreVector of the screen with centerX and centerY from earlier
+                Vector2 centerVector = new Vector2(centerX, centerY);
+
+                // finds the vectors for the starts and ends of each axes
+                Vector2 realStart = new Vector2(0, centerY);
+                Vector2 realEnd = new Vector2(GetScreenWidth(), centerY);
+
+                Vector2 imaginaryStart = new Vector2(GetScreenWidth() / 2, 0);
+                Vector2 imaginaryEnd = new Vector2(GetScreenWidth() / 2, GetScreenHeight());
+
+                // draws real and imaginary axes
+                DrawLineEx(realStart, realEnd, 3.0f, Color.LightGray);
+                DrawLineEx(imaginaryStart, imaginaryEnd, 3.0f, Color.LightGray);
+
+                // draws the modulus swamp outline and fills it in with a transparent red
+                Color swampColour = new Color(255, 0, 0, 50);
+                DrawCircle(centerX, centerY, 118, swampColour);
+                DrawRing(centerVector, 117, 120, 0, 360, 0, Color.LightGray);
+
+                // ----------------------------------------------------------------------------------
+
+                // draws both tanks so they keep their updated positions
+                player1.Draw();
+                player2.Draw();
+
+                EndDrawing();
+            }
+            CloseWindow();
+        }
+    }
+}
+```
+
+### 3. Evidence of Testing
+- Visual Verification: upon running, 2 tanks (one red and one blue) are drawn onto the Argand diagram, each 100 pixels from the corners. The red tank can be moved with W, A, S, D and the blue tank with Up, Left, Down, Right Arrows.
+- Figure 1: upon start
+- <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/049b4156-862d-4db0-ab2d-e015798581ce" />
+- Figure 2: after movement
+- <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/23d58af9-ab82-4646-9dda-2c4724e93627" />
+
+- Compilation and Error Log Status:
+  (The solution compiles cleanly with 0 Errors and 0 Warnings)
+- <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/620b38b4-31a0-4523-aeb2-bf4f214f96ff" />
 
 
 
