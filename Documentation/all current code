@@ -302,3 +302,69 @@ namespace Complex_Tanks_new_and_improved
         }
     }
 }
+
+//-----------------------------------------------------------------------------------------------------------------------
+
+
+using System.Numerics;
+using static Raylib_cs.Raylib;
+using Color = Raylib_cs.Color;
+using KeyboardKey = Raylib_cs.KeyboardKey;
+using MouseButton = Raylib_cs.MouseButton;
+
+namespace Complex_Tanks_new_and_improved
+{
+    public enum MissileType
+    {
+        Default,
+        Real,
+        Imaginary,
+        BounceMissile
+    }
+    internal class Missile
+    {
+        // --- VARIABLE DECLARATION ---
+        private ComplexNumber missilePosition;
+        private ComplexNumber missileDirection;
+
+        private float missileSpeed;
+        private Color missileColour;
+        private MissileType tankType;
+        private bool isDestructable;
+
+        // keeps all the variables encapsulated
+        public Missile(double startX, double startY, double startDirectionX, double startDirectionY, float baseSpeed, Color colour, MissileType inputType, bool inputIsDestructable)
+        {
+            missilePosition = new ComplexNumber(startX, startY);
+            missileDirection = new ComplexNumber(startDirectionX, startDirectionY);
+
+            missileSpeed = baseSpeed;
+            missileColour = colour;
+            tankType = inputType;
+            isDestructable = inputIsDestructable;
+        }
+
+        public void Draw()
+        {
+            // find the center of the screen
+            float centerX = GetScreenWidth() / 2.0f;
+            float centerY = GetScreenHeight() / 2.0f;
+            float scale = 30.0f; // 30 pixels per unit
+
+            // convert the tanks position into screen pixels
+            float screenX = centerX + ((float)missilePosition.Real * scale);
+            float screenY = centerY - ((float)missilePosition.Imaginary * scale);
+
+            // creates the vectors for the position and size of the tank
+            Vector2 screenPosition = new Vector2(screenX, screenY);
+
+            // draws circular missile
+            DrawCircleV(screenPosition, 1, missileColour);
+        }
+        public void Update()
+        {
+            ComplexNumber tempMovement = new ComplexNumber(missileDirection.Real * missileSpeed, missileDirection.Imaginary * missileSpeed);
+            missilePosition = missilePosition.Add(tempMovement);
+        }
+    }
+}
