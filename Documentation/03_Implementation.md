@@ -1,3 +1,15 @@
+layout:
+
+## Iteration :
+
+### 1. Objective
+
+### 2. Core Code Solution
+
+### 3. Evidence of Testing
+
+
+
 # Implementation
 Design $\rightarrow$ Code $\rightarrow$ Test $\rightarrow$ Evaluate.
 
@@ -203,16 +215,6 @@ namespace Complex_Tanks_new_and_improved
             rotateRightKey = right;
         }
         
-        public void Fire()
-        {
-
-        }
-
-        public void PowerUp()
-        {
-
-        }
-
         public void Update()
         {
             // --- FORWARD MOVEMENT ---
@@ -281,9 +283,9 @@ namespace Complex_Tanks_new_and_improved
     }
 }
 ```
-#### The Execution Driver Loop
+#### The Initializing code in the Main method
 ```csharp
-        public static void Main()
+public static void Main()
 {
     // Initializes window ("Complex Tanks"), sets it to borderless windowed and sets the frames per second to 60
     InitWindow(800, 600, "Complex Tanks");
@@ -395,11 +397,271 @@ namespace Complex_Tanks_new_and_improved
 
 ## Iteration 4: Combat mechanics
 
+### 1. Objective
+the goal of this iteration is to have the tanks firing missiles which get destroyed when touching an enemy tank or reaching the borders. The missiles should also do damage to the tanks and have them get destroyed when health reaches 0.
+In this case the missiles do 25 damage and the tanks have 100 HP
+
+### 2. Core Code Solution
+```csharp
+using System.Numerics;
+using static Raylib_cs.Raylib;
+using Color = Raylib_cs.Color;
+using KeyboardKey = Raylib_cs.KeyboardKey;
+using MouseButton = Raylib_cs.MouseButton;
+
+namespace Complex_Tanks_new_and_improved
+{
+    public enum MissileType
+    {
+        Default,
+        Real,
+        Imaginary,
+        Bounce
+    }
+    internal class Missile
+    {
+        // --- VARIABLE DECLARATION ---
+        private ComplexNumber missilePosition;
+        private ComplexNumber missileDirection;
+
+        private float missileSpeed;
+        private Color missileColour;
+        private MissileType missileType;
+        private bool isDestructable;
+        private int missileDamage;
+
+        //  missile position and missile damage become public so the main program can access them
+        public ComplexNumber Position => missilePosition;
+        public int Damage => missileDamage;
+
+        // keeps all the variables encapsulated
+        public Missile(double startX, double startY, double startDirectionX, double startDirectionY, float baseSpeed, Color colour, MissileType inputType, bool inputIsDestructable)
+        {
 
 
+            missilePosition = new ComplexNumber(startX, startY);
+            missileDirection = new ComplexNumber(startDirectionX, startDirectionY);
 
+            missileSpeed = baseSpeed;
+            missileColour = colour;
+            missileType = inputType;
+            isDestructable = inputIsDestructable;
 
+            // will set the missiles damage to different values depending on what missile type it is
+            switch (inputType)
+            {
+                case MissileType.Default:
+                    missileDamage = Constants.DEFAULT_MISSILE_DAMAGE;
+                    break;
+                case MissileType.Bounce:
+                    missileDamage = Constants.BOUNCE_MISSILE_DAMAGE;
+                    break;
+                case MissileType.Real:
+                    missileDamage = Constants.REAL_MISSILE_DAMAGE;
+                    break;
+                case MissileType.Imaginary:
+                    missileDamage = Constants.IMAGINARY_MISSILE_DAMAGE;
+                    break;
 
+            }
+        }
 
+        public void Draw()
+        {
+            // find the center of the screen
+            float centerX = GetScreenWidth() / 2.0f;
+            float centerY = GetScreenHeight() / 2.0f;
 
+            // convert the missiles position into screen pixels
+            float screenX = centerX + ((float)missilePosition.Real * Constants.PIXEL_SCALE);
+            float screenY = centerY - ((float)missilePosition.Imaginary * Constants.PIXEL_SCALE);
+
+            // creates the vector for the position of the missile
+            Vector2 missileSpawnPosition = new Vector2(screenX, screenY);
+
+            // draws circular missile
+            DrawCircleV(missileSpawnPosition, Constants.MISSILE_SIZE, missileColour);
+        }
+
+        public void Update()
+        {
+            ComplexNumber tempMovement = new ComplexNumber(missileDirection.Real * missileSpeed, missileDirection.Imaginary * missileSpeed);
+            missilePosition = missilePosition.Add(tempMovement);
+        }
+
+        public bool IsOutOfBounds()
+        {
+            // find the center of the screen
+            float centerX = GetScreenWidth() / 2.0f;
+            float centerY = GetScreenHeight() / 2.0f;
+
+            // convert the missiles position into screen pixels
+            float screenX = centerX + ((float)missilePosition.Real * Constants.PIXEL_SCALE);
+            float screenY = centerY - ((float)missilePosition.Imaginary * Constants.PIXEL_SCALE);
+
+            // checks if the missile has passed any of the 4 borders
+            if (screenX < 0 || screenX > GetScreenWidth() || screenY < 0 || screenY > GetScreenHeight())
+            {
+                return true;
+            }
+            return false;
+        }
+    }
+}
+```
+#### The Initializing code in the Main method
+```csharp
+public static void Main()
+{
+    // Initializes window ("Complex Tanks"), sets it to borderless windowed and sets the frames per second to 60
+    InitWindow(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, "Complex Tanks");
+    ToggleBorderlessWindowed();
+    SetTargetFPS(60);
+
+    // --- finds start position of the tanks ---
+    // finds the center X and Y position and the offset the tanks spawn from the wall
+    int centerX = GetScreenWidth() / 2;
+    int centerY = GetRenderHeight() / 2;
+    int offset = 100;
+
+    // calculates the start X and Y positions for each tank (top left and bottom right corners)
+    float player1StartX = (offset - centerX) / Constants.PIXEL_SCALE;
+    float player1StartY = (centerY - offset) / Constants.PIXEL_SCALE;
+    float player2StartX = -player1StartX;
+    float player2StartY = -player1StartY;
+
+    float speed = 1.0f / 12.0f;
+    int HP = 100;
+
+    List<Tank> aliveTanks = new List<Tank>();
+
+    // player 1 and player 2 are drawn
+    Tank player1 = new Tank(player1StartX, player1StartY, 1, 0, speed, HP, Color.Red, TankType.Default, true, true,
+                   KeyboardKey.W, KeyboardKey.S, KeyboardKey.A, KeyboardKey.D);
+    Tank player2 = new Tank(player2StartX, player2StartY, -1, 0, speed, HP, Color.Blue, TankType.Default, true, true,
+                   KeyboardKey.Up, KeyboardKey.Down, KeyboardKey.Left, KeyboardKey.Right);
+
+    // adds both players to a list of living playe
+    aliveTanks.Add(player1);
+    aliveTanks.Add(player2);
+
+    // --- MAIN LOOP (runs 60 times per second) ---
+    while (!WindowShouldClose())
+    {
+
+        // a loop to deal the tanks damage when they are hit my an enemies missile
+        for (int i = 0; i < aliveTanks.Count; i++)
+        {
+            for (int j = aliveTanks[i].ActiveMissiles.Count - 1; j >= 0; j--)
+            {
+                ComplexNumber missilePos = aliveTanks[i].ActiveMissiles[j].Position;
+
+                for (int k = 0; k < aliveTanks.Count; k++)
+                {
+                    if (!(i == k))
+                    {
+                        Tank enemyTank = aliveTanks[k];
+                        if (enemyTank.HasBeenHit(missilePos))
+                        {
+                            int damage = aliveTanks[i].ActiveMissiles[j].Damage;
+
+                            enemyTank.TakeDamage(damage);
+
+                            aliveTanks[i].ActiveMissiles.RemoveAt(j);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        // updates the players positions as they move if they are alive
+        for (int i = aliveTanks.Count - 1; i >= 0; i--)
+        {
+            aliveTanks[i].Update();
+
+            if (!aliveTanks[i].IsAlive)
+            {
+                aliveTanks.RemoveAt(i);
+            }
+        }
+        
+        // ----------------------------------------------------------------------------------
+
+        // --- KEY RECOGNITION ---
+        // if fire keys are being pressed, it calls the fire method to shoot a missile
+        if (IsKeyPressed(KeyboardKey.Space))
+        {
+            player1.Fire(MissileType.Default);
+        }
+        if (IsMouseButtonPressed(MouseButton.Left))
+        {
+            player2.Fire(MissileType.Default);
+        }
+
+        // if power-up keys are being pressed, it calls the PowerUp method to use the power-up
+        if (IsKeyPressed(KeyboardKey.E))
+        {
+            player1.PowerUp();
+        }
+        if (IsMouseButtonPressed(MouseButton.Right))
+        {
+            player2.PowerUp();
+        }
+
+        // ----------------------------------------------------------------------------------
+
+        BeginDrawing();
+
+        // ----------------------------------------------------------------------------------
+
+        // --- ARGAND DIAGRAM AND MODULUS SWAMP ---
+        // clears the screen to a white canvas
+        ClearBackground(Color.White);
+
+        // finds the centreVector of the screen with centerX and centerY from earlier
+        Vector2 centerVector = new Vector2(centerX, centerY);
+
+        // finds the vectors for the starts and ends of each axes
+        Vector2 realStart = new Vector2(0, centerY);
+        Vector2 realEnd = new Vector2(GetScreenWidth(), centerY);
+
+        Vector2 imaginaryStart = new Vector2(GetScreenWidth() / 2, 0);
+        Vector2 imaginaryEnd = new Vector2(GetScreenWidth() / 2, GetScreenHeight());
+
+        // draws real and imaginary axes
+        DrawLineEx(realStart, realEnd, 3.0f, Color.LightGray);
+        DrawLineEx(imaginaryStart, imaginaryEnd, 3.0f, Color.LightGray);
+
+        // draws the modulus swamp outline and fills it in with a transparent red
+        Color swampColour = new Color(255, 0, 0, 50);
+        DrawCircle(centerX, centerY, 118, swampColour);
+        DrawRing(centerVector, 117, 120, 0, 360, 0, Color.LightGray);
+
+        // ----------------------------------------------------------------------------------
+
+        // draws both tanks so they keep their updated positions
+        foreach (Tank aliveTank in aliveTanks)
+        {
+            aliveTank.Draw();
+        }
+
+        EndDrawing();
+    }
+}
+```
+
+### 3. Evidence of Testing
+- Evaluation: The addition of the Missile() class uses the ComplexNumber engine and Raylib rendering successfully. A bug was found in the initial drawing of the missile as its actual position was 40 pixels ahead of its visual position due to a mixup with the Complex Units and Screen Pixels.
+- Visual Verification: Upon startup, both tanks can fire with their given fire keys (space for Red, left click for Blue), when the enemy tank has taken 4 hits it disappears and can no longer take inputs.
+- Beta Test Issue: During the initial drawing of the Missile, a bug was found where the missiles visual position was 40 pixels ahead of its actual position, so the missile would pass through the borders and enemy tanks by 40 pixels and only then would it disappear.
+- Issue Fix: The reason for the issue was that when trying to make the missile spawn at the end of the turret (the turret was 40 pixels long) I just added 40 without converting it. Converting the pixel length into complex units before adding it to the tanks position by dividing it by the conversion scale was enough to fix the issue.
+  - Figure 1: whilst firing
+  - <img width="957" height="535" alt="image" src="https://github.com/user-attachments/assets/b22de7b1-2ffb-4cc5-9bad-472557ea7a2b" />
+  - Figure 2: after eliminating blue
+  - <img width="1920" height="1060" alt="image" src="https://github.com/user-attachments/assets/6381e247-e224-492a-9378-f785c074618a" />
+  
+- Compilation and Error Log Status:
+  (The solution compiles cleanly with 0 Errors and 0 Warnings)
+- <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/d6d15ce5-8a6d-457b-8c06-ba69c4de3ac3" />
 
