@@ -1,8 +1,6 @@
 # Complex Tanks
 A 2D tank game coded on C# with Raylib, where mechanics and movement are driven by **complex numbers** and the map is an **Argand diagram**.
 
-I need: Analysis, Design, Technical Solution, Testing, and Evaluation
-
 ---
 
 ## Table of Contents
@@ -70,3 +68,16 @@ Using Object-Oriented Inheritance, the game features distinct tank classes:
 * [03_Implementation.md](./Documentation/03_Implementation.md)
 * [04_Testing.md](./Documentation/04_Testing.md)
 * [05_Evaluation.md](./Documentation/05_Evaluation.md)
+
+--- 
+
+## Project Progress
+- [x] create the Complex number math engine
+- [x] create the window with the Raylib import
+- [x] draw on the Argand Diagram and modulus swamp
+- [x] create the Tank class and get tanks drawn
+- [x] create the update method in the Tank class to get them moving
+- [x] create the Missile class
+- [ ] get the missiles moving and destroying tanks
+- [ ] setup the health UI
+- [ ] setup the game screens (menu, settings, gamemodes)
