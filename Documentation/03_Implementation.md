@@ -1,15 +1,3 @@
-layout:
-
-## Iteration :
-
-### 1. Objective
-
-### 2. Core Code Solution
-
-### 3. Evidence of Testing
-
-
-
 # Implementation
 Design $\rightarrow$ Code $\rightarrow$ Test $\rightarrow$ Evaluate.
 
@@ -782,9 +770,9 @@ public static void Main()
 
 ### 3. Evidence of Testing
 - Evaluation: The addition of the Missile() class uses the ComplexNumber engine and Raylib rendering successfully. A bug was found in the initial drawing of the missile as its actual position was 40 pixels ahead of its visual position due to a mixup with the Complex Units and Screen Pixels.
-- Visual Verification: Upon startup, both tanks can fire with their given fire keys (space for Red, left click for Blue), when the enemy tank has taken 4 hits it disappears and can no longer take inputs.
-- Beta Test Issue: During the initial drawing of the Missile, a bug was found where the missiles visual position was 40 pixels ahead of its actual position, so the missile would pass through the borders and enemy tanks by 40 pixels and only then would it disappear.
-- Issue Fix: The reason for the issue was that when trying to make the missile spawn at the end of the turret (the turret was 40 pixels long) I just added 40 without converting it. Converting the pixel length into complex units before adding it to the tanks position by dividing it by the conversion scale was enough to fix the issue.
+- Visual Verification: Upon startup, both tanks can fire with their given fire keys (space for Red, left click for Blue), when the enemy tank has taken 4 hits it disappears and can no longer take inputs.  
+- Beta Test Issue: During the initial testing of the Projectile mechanics, a bug was found where the missiles logical position was 40 pixels ahead of its visual position, so the missile would falsely trigger collisions before the sprite reached its target.
+- Issue Fix: The reason for the issue was that when trying to make the missile spawn at the end of the turret (the turret is 40 pixels long) I added the raw integer value of 40 without converting it. Because the complex math engine uses grid units instead of pixels, adding 40 shifted the logic by 40 units ($40 \times 30 = 1200\text{ pixels}$). Converting the pixel length into complex units before adding it to the tanks position by dividing it by the conversion scale (Constants.PIXEL_SCALE = 30) was enough to fix the issue. The equation used to fix the issue was: $$\text{turretLength} = \frac{\text{Constants.TURRET\_LENGTH}}{\text{Constants.PIXEL\_SCALE}}$$.  
   - Figure 1: whilst firing
   - <img width="957" height="535" alt="image" src="https://github.com/user-attachments/assets/b22de7b1-2ffb-4cc5-9bad-472557ea7a2b" />
   - Figure 2: after eliminating blue
