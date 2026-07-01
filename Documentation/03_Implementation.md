@@ -509,6 +509,135 @@ namespace Complex_Tanks_new_and_improved
     }
 }
 ```
+#### The Missile logic in the Tank class methods
+```csharp
+public void Fire(MissileType bulletType)
+{
+    double turretLength = Constants.TURRET_LENGTH / Constants.PIXEL_SCALE;
+    double turretLengthX = turretLength * tankDirection.Real;
+    double turretLengthY = turretLength * tankDirection.Imaginary;
+
+    double startX = tankPosition.Real + turretLengthX;
+    double startY = tankPosition.Imaginary + turretLengthY;
+
+    // creates a new missile and adds it to the list of active missiles
+    Missile newMissile = new Missile(startX, startY, tankDirection.Real, tankDirection.Imaginary, tankSpeed * 3, tankColour, bulletType, true);
+    activeMissiles.Add(newMissile);
+}
+
+public void Update()
+{
+    // --- FORWARD MOVEMENT ---
+    if (IsKeyDown(forwardKey))
+    {
+        // creates the movement vector to add to the tanks current position
+        ComplexNumber tempMovementVector = new ComplexNumber(tankDirection.Real * tankSpeed, tankDirection.Imaginary * tankSpeed);
+        tankPosition = tankPosition.Add(tempMovementVector);
+    }
+    // --- BACKWARD MOVEMENT ---
+    if (IsKeyDown(backwardKey))
+    {
+        // creates the movement vector to subtract to the tanks current position
+        ComplexNumber tempMovementVector = new ComplexNumber(tankDirection.Real * tankSpeed, tankDirection.Imaginary * tankSpeed);
+        tankPosition = tankPosition.Subtract(tempMovementVector);
+    }
+    // --- ROTATIONS ---
+    if (IsKeyDown(rotateLeftKey))
+    {
+        // multiplies the tanks direction by the constant Anit-clockwise rotation
+        tankDirection = tankDirection.Multiply(rotateLeft);
+    }
+    if (IsKeyDown(rotateRightKey))
+    {
+        // multiplies the tanks direction by the constant clockwise rotation
+        tankDirection = tankDirection.Multiply(rotateRight);
+    }
+
+    // --- VECTOR RESET ---
+    // divide the vector length by the current modulus to reset it back to exactly 1.0
+    double temporaryModulus = tankDirection.CalculateModulus();
+
+    // to prevent a "Divide by Zero" error, only reset it if the modulus is greater than 0
+    if (temporaryModulus > 0)
+    {
+        tankDirection.Real /= temporaryModulus;
+        tankDirection.Imaginary /= temporaryModulus;
+    }
+
+    for (int i = activeMissiles.Count - 1; i >= 0; i--)
+    {
+        activeMissiles[i].Update();
+        if (activeMissiles[i].IsOutOfBounds())
+        {
+            activeMissiles.RemoveAt(i);
+        }
+    }
+
+}
+public void Draw()
+{
+    // find the center of the screen
+    float centerX = GetScreenWidth() / 2.0f;
+    float centerY = GetScreenHeight() / 2.0f;
+
+    // convert the tanks position into screen pixels
+    float screenX = centerX + ((float)tankPosition.Real * Constants.PIXEL_SCALE);
+    float screenY = centerY - ((float)tankPosition.Imaginary * Constants.PIXEL_SCALE);
+
+    // creates the vectors for the position and size of the tank
+    Vector2 screenPosition = new Vector2(screenX, screenY);
+    Vector2 drawOffset = new Vector2(screenX - Constants.TANK_HALF_SIZE, screenY - Constants.TANK_HALF_SIZE);
+    Vector2 size = new Vector2(Constants.TANK_SIZE, Constants.TANK_SIZE);
+
+    // creates the vectors for the tanks turret
+    Vector2 turretStart = screenPosition;
+    Vector2 turretEnd = new Vector2(
+        screenX + (float)tankDirection.Real * Constants.TURRET_LENGTH,
+        screenY - (float)tankDirection.Imaginary * Constants.TURRET_LENGTH);
+
+    // draws the tank and then turret
+    DrawRectangleV(drawOffset, size, tankColour);
+    DrawLineEx(turretStart, turretEnd, 7.0f, Color.Black);
+
+    for (int i = 0; i < activeMissiles.Count; i++)
+    {
+        activeMissiles[i].Draw();
+    }            
+}
+
+public bool HasBeenHit(ComplexNumber tempMissilePosition)
+{
+    // finds the missiles relative position to the tank
+    ComplexNumber missileRelativePosition = tempMissilePosition.Subtract(tankPosition);
+
+    // calculates the complex conjugate of the tanks direction to multiply with the relative position to unrotate the missile
+    ComplexNumber reverseRotation = tankDirection.ComplexConjugate();
+    ComplexNumber unRotatedMissilePosition = missileRelativePosition.Multiply(reverseRotation);
+
+    // calculates the invisible hitbox of the tank
+    double halfSize = Constants.TANK_HALF_SIZE / Constants.PIXEL_SCALE;
+
+    // checks if the missile is within its hitbox 
+    if (Math.Abs(unRotatedMissilePosition.Real) <= halfSize && Math.Abs(unRotatedMissilePosition.Imaginary) <= halfSize)
+    {
+        return true;
+    }
+    return false;
+}
+
+public void TakeDamage(int damageReceived)
+{
+    // deals the tank damage
+    tankHP -= damageReceived;
+
+    // checks if the damage has put the health below 0, if so kill the tank and reset its health to 0 
+    if (tankHP <= 0)
+    {
+        tankHP = 0;
+        isAlive = false;
+    }
+}
+```
 #### The Initializing code in the Main method
 ```csharp
 public static void Main()
