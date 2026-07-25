@@ -79,6 +79,6 @@ Using Object-Oriented Inheritance, the game features distinct tank classes:
 - [x] create the update method in the Tank class to get them moving
 - [x] create the Missile class
 - [x] get the missiles moving and destroying tanks
-- [ ] setup the health UI
 - [ ] setup tank and wall collisions
+- [ ] setup the health UI
 - [ ] setup the game screens (menu, settings, gamemodes)
