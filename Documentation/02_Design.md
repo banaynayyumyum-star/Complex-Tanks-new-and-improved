@@ -90,6 +90,32 @@ endif
 
 ---
 
+## Application
+
+### 1. Queues
+- **used for:** Managing the tanks upcoming ammunition list and rendering a live ammunition HUD (Head-up display).
+- **why this structure:** A queue uses a FIFO (first in first out) order. This same design can be seen by an ammunition belt: the first missile loaded is the first fired.
+- **benefits:**
+  - $O(1)$ constant time complexity for enqueueing and dequeueing
+  - prevents the player from skipping or changing the order of the ammunition.
+
+### 2. Stacks
+- **used for:** Navigating between game menus (menu, options, customisation, game) and managing the players inventory of collected power-ups.
+- **why this structure:** if you go Menu $\rightarrow$ Settings $\rightarrow$ Visual, pressing escape pops 1 screen off the LIFO (last in first out) stack to return to the previous screen seamlessly. This structure can also be applied to a power-up stack where the most recent pick-up is the players usable power-up.
+- **benefits:**
+  - $O(1)$ push/pop time complexity for instant screen changing
+  - eliminates complex structures getting messy and unreadable
+
+### 3. Dictionary
+- **used for:** Storing the key-binds for both players and UI navigation. Also for looking up properties for Tank/Missile types.
+- **why this structure:** the structure stores data in key-value pairs to replace multiple individual fields with a single controller object.
+- **benefits:**
+  - ensures cleaner encapsulation and maintainability
+  - $O(1)$ constant time complexity per lookup
+  - makes it easier to add AI controls later
+
+---
+
 ## User Interface Design
 
 ### Screen Descriptions
