@@ -54,6 +54,17 @@ This game is targeted at any student or gaming enthusiast with an interest in ma
 ## User Requirements
 these requirements were collected from several interviews with classmates in Computer Science and Further Maths.
 
+### Primary User Research (survey)
+To collect initial user requirements and refine gameplay mechanics, a Google Forms questionnaire was sent to classmates on Teams.
+
+![User Survey Results](imagiengieneineignie)
+
+#### Key Findings:
+- e
+- e
+- e
+- e
+
 ### Functional Requirements (FR)
 - FR1: The system must calculate tank positions using the complex form $z = x + iy$.
 - FR2: The system must calculate rotations using Complex multiplication.
