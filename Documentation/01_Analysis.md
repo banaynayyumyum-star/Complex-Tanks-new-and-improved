@@ -44,7 +44,7 @@ This game is targeted at any student or gaming enthusiast with an interest in ma
 | **Perspective** | Top-down 2D | Top-down 2.5D | Top-down 2D | **Top-down 2D** |
 | **Movement Physics** | dual-track arcade simulation (linear $x,y$) | standard $x,y$ vector movement | standard $x,y$ vector movement | **Complex number tranformations ($z = x + iy$)** |
 | **Obstacles** | static, indestructible walls & landmines | destructible wooden walls and bounce walls | destructible geometry shapes | **Real or Imaginary phase shifting walls** |
-| **Aiming Mechanism** | turret locked in chassis direction | independent aiming with Wii remote | independent aiming with mouse | **independent turret rotation with Complex number multiplication** |
+| **Aiming Mechanism** | turret locked in chassis direction | independent aiming with Wii remote | independent aiming with mouse | **turret rotation with Complex number multiplication** |
 | **Game Modes** | 1v1 local PvP | progressive single player waves | Free-for-all, teams, survival, maze | **local 1v1** |
 | **Progression** | none (only 1v1, PvP) | 100 missions with 20 stages of enemies | upgrades and levels | **various tanks and special upgrades** |
 | **Target Audience** | none (pure arcade) | none (pure arcade) | players who enjoy fast paced gameplay | A-level / Further maths students (Education & strategic) |
