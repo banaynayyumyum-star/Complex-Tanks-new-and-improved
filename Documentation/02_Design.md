@@ -13,17 +13,17 @@ Inheritance: each type of tank will have these base properties with each having 
 ### Tank
 - Variables: speed (Type: double), colour (Type: Color), position (Type: ComplexNumber), direction (Type: ComplexNumber), type (Type: enum), HP (Type: int), uniqueTrait (Type: string / custom method)
 - Methods: move forward/backward, rotate left/right, fire Missile, use PowerUp
-- Inheritance: each type of tank will have these base properties with each having its own unique trait which will override the default ones EG: an Aerodynamic tank will override the speed and health
+- Inheritance: subclasses (`AerodynamicTank`, `BulkyTank`) inherit movement and combat logic while overriding health and speed attributes
 
 ### Missile
 - Variables: speed (Type: double), colour (Type: Color), position (Type: ComplexNumber), direction (Type: ComplexNumber), type (Type: enum), isDestructable (Type: bool)
-- Methods: move in the direction the tank is facing, bounce of walls (if it can), damage tank
-- Inheritance: each missile will have these properties but specific missiles can override them EG: an imaginary missile will override the type property to 'Imaginary' and bypass Real walls
+- Methods: move in tank facing direction, bounce of walls, damage tank
+- Inheritance: derived missile classes override properties (e.g., `ImaginaryMissile` overrides wall collision checks to phase through walls of the matching phase type)
 
 ### PowerUp
 - Variables: type (Type: enum), whatItAffects (Type: string / target object reference)
-- Methods: apply buff 
-
+- Methods: apply buff (e.g., execute Complex Conjugate position reflection)
+  
 ### Obstacle/Wall
 - Variables: position (Type: ComplexNumber), type (Type: enum), colour (Type: Color)
 - Methods: check collision
@@ -107,8 +107,8 @@ endif
   - prevents the player from skipping or changing the order of the ammunition.
 
 ### 2. Stacks
-- **used for:** Navigating between game menus (menu, options, customisation, game) and managing the players inventory of collected power-ups.
-- **why this structure:** if you go Menu $\rightarrow$ Settings $\rightarrow$ Visual, pressing escape pops 1 screen off the LIFO (last in first out) stack to return to the previous screen seamlessly. This structure can also be applied to a power-up stack where the most recent pick-up is the players usable power-up.
+- **used for:** Navigating between game menus (main menu, gameplay arena, game over, help overlay) and managing the players inventory of collected power-ups.
+- **why this structure:** When a player presses 'H' during a match, the `HelpOverlayScreen` is pushed onto the LIFO (last-in, first-out) stack on top of the active `GameplayArenaScreen`. Pressing `Escape` pops the overlay off. For power-ups, pushing collected items onto a stack ensures the most recently acquired power-up is used first.
 - **benefits:**
   - $O(1)$ push/pop time complexity for instant screen changing
   - eliminates complex structures getting messy and unreadable
@@ -119,24 +119,20 @@ endif
 - **benefits:**
   - ensures cleaner encapsulation and maintainability
   - $O(1)$ constant time complexity per lookup
-  - makes it easier to add AI controls later
 
 ---
 
 ## User Interface Design
 
 ### Screen Descriptions
-- Main Menu Screen: Includes a title ('Complex Tanks') accompanied by a 'Play' button, 'settings' button and a 'help' button. An 'Exit' button is also included slightly below.
-- Game Modes Screen: Includes a list of the game modes (1v1 Local PvP, Player vs Bots, Timed Survival) and a 'back' button.
+- Main Menu Screen: Includes a title ('Complex Tanks') accompanied by a 'Play' button, and a 'help' button. An 'Exit' button is also included slightly below.
 - Gameplay Arena: Background with a rendered, labeled Argand diagram intersecting at (GetScreenWidth/2, GetScreenHeight/2).
   - The center features a shaded circle representing the Modulus Swamp ($|z| < 100$).
   - Top-Left HUD tracks Player 1's data (HP, ammunition queue, Power-Up stack)
   - Top-Right HUD tracks Player 2's data
-- Game Over Screen: Displays the outcome of the game (EG: "Player 1 Wins!" or "time survived: X seconds") with navigation options to the Main Menu
-- Settings Screen: Shows all customisable features (tank colours, Cheat Settings)
-- Help Screen: Presents you with a description of the game, its controls, and how each game mode works
+- Game Over Screen: Displays the outcome of the game (EG: "Player 1 Wins!") with navigation options to the Main Menu
+- Help Screen: Presents you with a description of the game, its controls and how the complex math mechanics work
 
 ### Navigation Flow
-- Main Menu $\rightarrow$ Game Modes $\rightarrow$ Gameplay Arena $\rightarrow$ Game Over
-- Main Menu $\leftrightarrow$ Settings
+- Main Menu $\rightarrow$ Gameplay Arena $\rightarrow$ Game Over
 - Main Menu $\leftrightarrow$ Help
