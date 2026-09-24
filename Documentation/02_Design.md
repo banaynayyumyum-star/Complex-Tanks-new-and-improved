@@ -32,6 +32,13 @@ Inheritance: each type of tank will have these base properties with each having 
 
 ## Algorithmic Design
 
+### Frame Execution Logic Flowchart
+The flowchart below shows the frame-by-frame physics loop executed inside the main program every cycle. It models how complex vector position are checked against the Modulus Swamp ($|z| < 100$) for debuffs, followed by phase-matching wall collision handing.
+
+![System Logic Flowchart](<img width="440" height="779" alt="image" src="https://github.com/user-attachments/assets/f69a4779-f41d-4c7c-9ae2-0ea5309300ff" />)
+
+---
+
 ### How the Tank moves and turns (Pseudo-Code)
 ```text
 // all un-set variable have been set elsewhere in the code
