@@ -38,27 +38,12 @@ use strategic maneuvers, mathematical position and buffs to obliterate your enem
 
 ---
 
-## Game Modes
-- **Classic 1v1:** 2 player duel to the death.
-- **Player vs Bots:** Single-player practice against AI tanks.
-- **Timed Survival:** Survive as long as possible against random bots with a disable turret.
-- **Waves (stretch goal):** Solo or Co-op waves of enemy bots.
-
----
-
-## Tank Archetypes
+## Tank Archetypes and Buffs
 Using Object-Oriented Inheritance, the game features distinct tank classes:
 - **Aerodynamic Tank:** Lower health, higher movement speed.
 - **Bulky Tank:** Higher health, lower movement speed.
-- **Burst Tank:** Default stats, can shoot 3 missiles in a quick burst.
-- **Multishot Tank:** Default stats, shoots 3 diverging missiles forwards simultaneously.
 
----
-
-## Power-Ups & Buffs
 - **Complex conjugate ($\bar{z}$):** Instantly reflect the player's tank across the Real axis to dodge an attack.
-- **Scalar Multiplier ($kz$):** Temporarily mltiplies the tank's velocity vector by a scalar constant $k$.
-- **The $i$-Shield (Rotation):** Rotates all incoming enemy velocity vectors by $90^\circ$ ($\times i$), deflecting missiles.
 
 ---
 
@@ -81,4 +66,4 @@ Using Object-Oriented Inheritance, the game features distinct tank classes:
 - [x] get the missiles moving and destroying tanks
 - [ ] setup tank and wall collisions
 - [ ] setup the health UI
-- [ ] setup the game screens (menu, settings, gamemodes)
+- [ ] setup the game screens (menu, settings, start)
