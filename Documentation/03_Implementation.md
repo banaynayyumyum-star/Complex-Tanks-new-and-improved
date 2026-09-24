@@ -4,10 +4,10 @@ Design $\rightarrow$ Code $\rightarrow$ Test $\rightarrow$ Evaluate.
 ## Iteration 1: Custom Complex Number Math Engine
 
 ### 1. Objective
-The purpose of this iteration was to build a custom structure to handle Complex number operations like addition subtraction and multiplication. Complex numbers cannot be processed normally due to their ($x + iy$) form so a custom blueprint was required to store the co-ordinates and perform transformations and modulus tracking.
+The purpose of this iteration was to build a custom structure to handle Complex number operations like addition subtraction and multiplication. Complex numbers cannot be processed normally due to their ($x + iy$) form so a custom blueprint was required to store the coordinates and perform transformations and modulus tracking.
 
 ### 2. Core Code Solution
-``` csharp
+```csharp
 namespace Complex_Tanks_new_and_improved
 {
     internal class ComplexNumber
@@ -56,13 +56,18 @@ namespace Complex_Tanks_new_and_improved
 
             return newModulus;
         }
+
+        public ComplexNumber ComplexConjugate()
+        {
+            return new ComplexNumber(Real, -Imaginary);
+        }
     }
 }
 ```
 
 ### 3. Evidence of Testing
-- Method Verification: To verify the math engine, I created a temporary testing block inside the Main method. I initialised two complex numbers and performed an addition operation. The ouput confirmed the sum was calculated correctly. The calculateModulus method was tested using a 3-4-5 triangle which returned the expected value of 5.0
-  - ``` csharp
+- Method Verification: To verify the math engine, I created a temporary testing block inside the Main method. I initialised two complex numbers and performed an addition operation. The output confirmed the sum was calculated correctly. The calculateModulus method was tested using a 3-4-5 triangle which returned the expected value of 5.0
+  - ```csharp
             // 1. Create two test complex numbers
             ComplexNumber c1 = new ComplexNumber(3, 4);
             ComplexNumber c2 = new ComplexNumber(1, 2);
@@ -92,7 +97,7 @@ namespace Complex_Tanks_new_and_improved
 The purpose of this is to create a background for the Arena so players can see what quadrant they are in and be aware of how specific gimmicks may affect them at the time. The modulus swamp is also added so players can see where they will get slowed. 
 
 ### 2. Core Code Solution
-``` csharp
+```csharp
 // Inside the main game update/draw loop
     // --- ARGAND DIAGRAM AND MODULUS SWAMP ---
     // clears the screen to a white canvas
@@ -119,7 +124,7 @@ The purpose of this is to create a background for the Arena so players can see w
     Raylib_cs.Color swampColour = new Raylib_cs.Color(255, 0, 0, 50);
     DrawCircle(centerX, centerY, 117, swampColour);
 ```
-Design modification note: when testing the original design for the modulus swamp (100 pixels out from the center) didnt affect the gameplay as much as desired so the radius was increased to 120 pixels to provide a more effective hazard zone.
+Design modification note: when testing the original design for the modulus swamp (100 pixels out from the center) didn't affect the gameplay as much as desired so the radius was increased to 120 pixels to provide a more effective hazard zone.
 
 ### 3. Evidence of Testing
 - Visual Verification: upon running, the Raylib window opens and both Real and Imaginary axes are drawn 3 pixels wide along with the outline for the modulus swamp and its transparent red filling.
@@ -140,14 +145,6 @@ The purpose of this iteration is to get the Tank class running and have a Tank f
 
 ### 2. Code Solution
 ```csharp
-using System.Numerics;
-using static Raylib_cs.Raylib;
-using Color = Raylib_cs.Color;
-using KeyboardKey = Raylib_cs.KeyboardKey;
-using MouseButton = Raylib_cs.MouseButton;
-
-
-
 namespace Complex_Tanks_new_and_improved
 {
     // creates the TankType data type
@@ -156,9 +153,6 @@ namespace Complex_Tanks_new_and_improved
         Default,
         Aerodynamic,
         Bulky,
-        Burst,
-        Multishot,
-        TimedSurvival
     }
     internal class Tank
     {
@@ -222,12 +216,12 @@ namespace Complex_Tanks_new_and_improved
             // --- ROTATIONS ---
             if (IsKeyDown(rotateLeftKey))
             {
-                // multiplies the tanks direction by the constant Anit-clockwise rotation
+                // multiplies the tanks direction by the constant clockwise rotation
                 tankDirection = tankDirection.Multiply(rotateLeft);
             }
             if (IsKeyDown(rotateRightKey))
-            {               
-                // multiplies the tanks direction by the constant clockwise rotation
+            {
+                // multiplies the tanks direction by the constant Anti-clockwise rotation
                 tankDirection = tankDirection.Multiply(rotateRight);
             }
 
@@ -271,103 +265,7 @@ namespace Complex_Tanks_new_and_improved
     }
 }
 ```
-#### The Initializing code in the Main method
-```csharp
-public static void Main()
-{
-    // Initializes window ("Complex Tanks"), sets it to borderless windowed and sets the frames per second to 60
-    InitWindow(800, 600, "Complex Tanks");
-    ToggleBorderlessWindowed();
-    SetTargetFPS(60);
-
-    // --- finds start position of the tanks ---
-    // finds the center X and Y position and the offset the tanks spawn from the wall
-    int centerX = GetScreenWidth() / 2;
-    int centerY = GetRenderHeight() / 2;
-    int offset = 100;
-
-    // calculates the start X and Y positions for each tank (top left and bottom right corners)
-    float player1StartX = (offset - centerX) / 30.0f;
-    float player1StartY = (centerY - offset) / 30.0f;
-    float player2StartX = - player1StartX;
-    float player2StartY = - player1StartY;
-
-    float speed = 1.0f / 12.0f;
-    int HP = 100;
-
-    // player 1 and player 2 are drawn
-    Tank player1 = new Tank(player1StartX, player1StartY, 1, 0, speed, HP, Color.Red, TankType.Default, true,
-                   KeyboardKey.W, KeyboardKey.S, KeyboardKey.A, KeyboardKey.D);
-    Tank player2 = new Tank(player2StartX, player2StartY, -1, 0, speed, HP, Color.Blue, TankType.Default, true,
-                   KeyboardKey.Up, KeyboardKey.Down, KeyboardKey.Left, KeyboardKey.Right);
-
-    // --- main loop (runs 60 times per second) ---
-    while (!WindowShouldClose())
-    {
-        // updates the players positions as they move
-        player1.Update();
-        player2.Update();
-
-        // ----------------------------------------------------------------------------------
-
-        // if fire keys are being pressed, it calls the fire method to shoot a missile
-        if (IsKeyPressed(KeyboardKey.Space))
-        {
-            player1.Fire();
-        }
-        if (IsMouseButtonPressed(MouseButton.Left))
-        {
-            player2.Fire();
-        }
-
-        // if power-up keys are being pressed, it calls the PowerUp method to use the power-up
-        if (IsKeyPressed(KeyboardKey.E))
-        {
-            player1.PowerUp();
-        }
-        if (IsMouseButtonPressed(MouseButton.Right))
-        {
-            player2.PowerUp();
-        }
-
-        // ----------------------------------------------------------------------------------
-
-        BeginDrawing();
-
-        // ----------------------------------------------------------------------------------
-
-        // --- ARGAND DIAGRAM AND MODULUS SWAMP ---
-        // clears the screen to a white canvas
-        ClearBackground(Color.White);
-
-        // finds the centreVector of the screen with centerX and centerY from earlier
-        Vector2 centerVector = new Vector2(centerX, centerY);
-
-        // finds the vectors for the starts and ends of each axes
-        Vector2 realStart = new Vector2(0, centerY);
-        Vector2 realEnd = new Vector2(GetScreenWidth(), centerY);
-
-        Vector2 imaginaryStart = new Vector2(GetScreenWidth() / 2, 0);
-        Vector2 imaginaryEnd = new Vector2(GetScreenWidth() / 2, GetScreenHeight());
-
-        // draws real and imaginary axes
-        DrawLineEx(realStart, realEnd, 3.0f, Color.LightGray);
-        DrawLineEx(imaginaryStart, imaginaryEnd, 3.0f, Color.LightGray);
-
-        // draws the modulus swamp outline and fills it in with a transparent red
-        Color swampColour = new Color(255, 0, 0, 50);
-        DrawCircle(centerX, centerY, 118, swampColour);
-        DrawRing(centerVector, 117, 120, 0, 360, 0, Color.LightGray);
-
-        // ----------------------------------------------------------------------------------
-
-        // draws both tanks so they keep their updated positions
-        player1.Draw();
-        player2.Draw();
-
-        EndDrawing();
-    }
-```
+Note: See Iteration 4 for the finalized Main() update loop containing the tank class usage and key handling
 
 ### 3. Evidence of Testing
 - Evaluation: The implementation of the Tank() class successfully uses the ComplexNumber math engine and Raylib rendering. By fixing the bug, the movement system is now consistent and smooth, and ready to support the upcoming combat mechanics in Iteration 4.
@@ -384,19 +282,46 @@ public static void Main()
 - <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/620b38b4-31a0-4523-aeb2-bf4f214f96ff" />
 
 ## Iteration 4: Combat mechanics
+in this iteration, hardcoded values from iteration 3 were refactored into a centralized constants class
 
 ### 1. Objective
-the goal of this iteration is to have the tanks firing missiles which get destroyed when touching an enemy tank or reaching the borders. The missiles should also do damage to the tanks and have them get destroyed when health reaches 0.
+The goal of this iteration is to have the tanks firing missiles which get destroyed when touching an enemy tank or reaching the borders. The missiles should also do damage to the tanks and have them get destroyed when health reaches 0.
 In this case the missiles do 25 damage and the tanks have 100 HP
 
 ### 2. Core Code Solution
+#### The constants class
 ```csharp
-using System.Numerics;
-using static Raylib_cs.Raylib;
-using Color = Raylib_cs.Color;
-using KeyboardKey = Raylib_cs.KeyboardKey;
-using MouseButton = Raylib_cs.MouseButton;
+namespace Complex_Tanks_new_and_improved
+{
+    public static class Constants
+    {
+        // screen size
+        public const int SCREEN_WIDTH = 800; // the default screen width (without fullscreen)
+        public const int SCREEN_HEIGHT = 600; // the default screen height (without fullscreen)
 
+        // map to unit conversion rate
+        public const float PIXEL_SCALE = 30.0f; // scale conversion to convert from complex units to pixels on the screen
+
+        // tank constants
+        public const int TURRET_LENGTH = 40; // the length of the turret on the tanks
+        public const int TANK_SIZE = 40; // the tanks side length (height and width) as it is a square
+        public const int TANK_HALF_SIZE = 20; // the distance from the center of the tank to its outer edge (half of the tank size)
+
+        // missile constants
+        public const int MISSILE_SIZE = 5; // the size of every missile fired
+        public const int DEFAULT_MISSILE_DAMAGE = 25; // damage dealt by default missile
+        public const int BOUNCE_MISSILE_DAMAGE = 15; // damage dealt by bouncer missiles
+        public const int REAL_MISSILE_DAMAGE = 20; // damage dealt by real-axis missiles
+        public const int IMAGINARY_MISSILE_DAMAGE = 20; // damage dealt by imaginary-axis missiles
+
+        // important values
+        public const int SWAMP_RADIUS = 118; // radius of the modulus swamp for calculations
+        public const double TURN_ANGLE_RADIANS = 0.0349; // magnitude of a 2 degree rotation in radians
+    }
+}
+```
+#### The Missile logic in the Missile class methods
+```csharp
 namespace Complex_Tanks_new_and_improved
 {
     public enum MissileType
@@ -482,7 +407,7 @@ namespace Complex_Tanks_new_and_improved
             // find the center of the screen
             float centerX = GetScreenWidth() / 2.0f;
             float centerY = GetScreenHeight() / 2.0f;
-
+            
             // convert the missiles position into screen pixels
             float screenX = centerX + ((float)missilePosition.Real * Constants.PIXEL_SCALE);
             float screenY = centerY - ((float)missilePosition.Imaginary * Constants.PIXEL_SCALE);
@@ -658,7 +583,7 @@ public static void Main()
     Tank player2 = new Tank(player2StartX, player2StartY, -1, 0, speed, HP, Color.Blue, TankType.Default, true, true,
                    KeyboardKey.Up, KeyboardKey.Down, KeyboardKey.Left, KeyboardKey.Right);
 
-    // adds both players to a list of living playe
+    // adds both players to a list of living players
     aliveTanks.Add(player1);
     aliveTanks.Add(player2);
 
@@ -716,16 +641,6 @@ public static void Main()
             player2.Fire(MissileType.Default);
         }
 
-        // if power-up keys are being pressed, it calls the PowerUp method to use the power-up
-        if (IsKeyPressed(KeyboardKey.E))
-        {
-            player1.PowerUp();
-        }
-        if (IsMouseButtonPressed(MouseButton.Right))
-        {
-            player2.PowerUp();
-        }
-
         // ----------------------------------------------------------------------------------
 
         BeginDrawing();
@@ -739,16 +654,7 @@ public static void Main()
         // finds the centreVector of the screen with centerX and centerY from earlier
         Vector2 centerVector = new Vector2(centerX, centerY);
 
-        // finds the vectors for the starts and ends of each axes
-        Vector2 realStart = new Vector2(0, centerY);
-        Vector2 realEnd = new Vector2(GetScreenWidth(), centerY);
-
-        Vector2 imaginaryStart = new Vector2(GetScreenWidth() / 2, 0);
-        Vector2 imaginaryEnd = new Vector2(GetScreenWidth() / 2, GetScreenHeight());
-
-        // draws real and imaginary axes
-        DrawLineEx(realStart, realEnd, 3.0f, Color.LightGray);
-        DrawLineEx(imaginaryStart, imaginaryEnd, 3.0f, Color.LightGray);
+        RenderArgandBackground(centerX, centerY); // (Background drawing logic detailed in Iteration 2)
 
         // draws the modulus swamp outline and fills it in with a transparent red
         Color swampColour = new Color(255, 0, 0, 50);
